@@ -7,7 +7,9 @@ Run InstallSimplusGT.m to install Simplus Grid Tool.
 
 ## Models
 Data and Simulink models in our paper can be found in 'Simplus-Grid-Tool\IMRF_case'.
+
 IEEE68_bad: the original case.
+
 IEEE68_bad_revised_para: the case after revising parameters.
 
 ## Quick Start

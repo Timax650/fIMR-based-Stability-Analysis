@@ -24,7 +24,7 @@ Port_v=evalin('base', 'Port_v');
  % discussed modes for generating the heat map
 kc = searchmode([26.14,30.37,90.77,143.9],OmegaPN/2/pi);    %68-bus, original
 % kc = searchmode([26.14,43.9,109.154,143.9],OmegaPN/2/pi);    %68-bus, retuned
- %discussed mode and apparatus for sensitivity analysis
+ % the discussed mode and apparatus for sensitivity analysis
 No_mode = 3; %the second mode(30.37Hz)
 Appsel=2; %2,4,5 → 26,28,29
 
@@ -112,17 +112,18 @@ No_pole_plot=No_mode;
 barwidth=0.7;
 figure_n2=figure_n+1;
 figure(figure_n2); clf;
-set(gcf,'unit','normalized','position',[0.2,0.2,0.22,0.07]);
+set(gcf,'unit','normalized','position',[0.2,0.2,0.22,0.1]);
 b1=bar(realcontr_pu(:,No_pole_plot),barwidth);
 b1.EdgeColor = 'none';
 axis([0 15 -1 1]);
-set(gca,'XTicklabel',{' '});
+set(gca,'XTicklabel',List_IBRbus_plot);
 set(gca,'position',[0.15,0.25,0.8,0.6]);
 set(gca,'fontsize',9,'fontname','Times New Roman');
+title('Contribution factor (Real)');
 
 figure_n2=figure_n2+1;
 figure(figure_n2); clf;
-set(gcf,'unit','normalized','position',[0.2,0.2,0.22,0.07]);
+set(gcf,'unit','normalized','position',[0.2,0.2,0.22,0.1]);
 b2=bar(imagcontr_pu(:,No_pole_plot),barwidth);
 b2.EdgeColor = 'none';
 axis([0 15 -1 1]);
@@ -133,7 +134,7 @@ set(gca,'XTicklabel',List_IBRbus_plot);
 set(gca,'position',[0.15,0.25,0.8,0.6]);
 % set(gca,'fontsize',Fsize,'fontname','Times New Roman');
 set(gca,'fontsize',9,'fontname','Times New Roman');
-
+title('Contribution factor (Imaginary)');
 
 %% sensitivity analysis
 pole_sel = 1j*wc(No_mode);  %in Hz
@@ -159,7 +160,9 @@ axis([-12 12 -7 5])
 set(gca,'XTick',-10:2:10);
 set(gca,'YTick',-10:2:10);
 set(gca,'fontsize',9,'fontname','Times New Roman');
-
+title('Determinant-parameter sensitivity');
+xlabel('real')
+ylabel('imaginary');
 
 function kc=searchmode(wc,frequency)
 kc=zeros(1,length(wc));

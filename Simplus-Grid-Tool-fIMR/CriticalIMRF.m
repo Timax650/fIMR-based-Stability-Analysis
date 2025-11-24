@@ -25,7 +25,7 @@ Port_v=evalin('base', 'Port_v');
 kc = searchmode([26.14,30.37,90.77,143.9],OmegaPN/2/pi);    %68-bus, original
 % kc = searchmode([26.14,43.9,109.154,143.9],OmegaPN/2/pi);    %68-bus, retuned
  % the discussed mode and apparatus for sensitivity analysis
-No_mode = 3; %the second mode(30.37Hz)
+No_mode = 2; %the second mode(30.37Hz)
 Appsel=2; %2,4,5 → 26,28,29
 
 k_wc = kc;
@@ -90,8 +90,8 @@ for i=1:Num_IBRbus
         Ysys_md_val(i,j)=Ysys{i}(1,1,k_wc(j));
         Ysys_md_abs(i,j)=abs(Ysys_md_val(i,j));
         IMR_md_val(i,j)=M_sq(i,k_wc(j));
-        contr(i,j) = Ysys{i}(1,1,k_wc(j))*Zapp{i}(1,1,k_wc(j)) + Ysys{i}(1,2,k_wc(j))*Zapp{i}(1,2,k_wc(j)) +...
-                     Ysys{i}(2,1,k_wc(j))*Zapp{i}(2,1,k_wc(j)) + Ysys{i}(2,2,k_wc(j))*Zapp{i}(2,2,k_wc(j));  
+        contr(i,j) = Ysys{i}(1,1,k_wc(j))*Zapp{i}(1,1,k_wc(j)) + Ysys{i}(2,1,k_wc(j))*Zapp{i}(1,2,k_wc(j)) +...
+                     Ysys{i}(1,2,k_wc(j))*Zapp{i}(2,1,k_wc(j)) + Ysys{i}(2,2,k_wc(j))*Zapp{i}(2,2,k_wc(j));   
         contrRealSum(j) = contrRealSum(j) + abs(real(contr(i,j)));
         contrImagSum(j) = contrImagSum(j) + abs(imag(contr(i,j)));
     end
@@ -108,6 +108,9 @@ Main_K_Plot(CfIMR,1);
 title('Small-Signal System Strength Heatmap');
 
  %contribution factor
+for i=1:length(List_IBRbus)
+    List_IBRbus_plot{i}=num2str(List_IBRbus(i));
+end
 No_pole_plot=No_mode;
 barwidth=0.7;
 figure_n2=figure_n+1;
@@ -127,9 +130,6 @@ set(gcf,'unit','normalized','position',[0.2,0.2,0.22,0.1]);
 b2=bar(imagcontr_pu(:,No_pole_plot),barwidth);
 b2.EdgeColor = 'none';
 axis([0 15 -1 1]);
-for i=1:length(List_IBRbus)
-    List_IBRbus_plot{i}=num2str(List_IBRbus(i));
-end
 set(gca,'XTicklabel',List_IBRbus_plot);
 set(gca,'position',[0.15,0.25,0.8,0.6]);
 % set(gca,'fontsize',Fsize,'fontname','Times New Roman');

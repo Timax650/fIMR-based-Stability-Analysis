@@ -20,6 +20,4 @@ tic
 SimplusGT.fIMR.Main();
 
 % run CriticalIMRF.m;
-
-%ModalAnalysisAPP; % Open the newly designed Modal analysis APP. This is only required once and results can be refreshed inside the APP.
 toc 

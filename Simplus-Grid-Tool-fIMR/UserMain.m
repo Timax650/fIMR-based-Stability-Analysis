@@ -10,7 +10,7 @@ clear;
 clc;
 close all;
 
-% choose the avaliable case studies: 1-3.
+% choose the avaliable case studies: 1-2.
 CaseStudy=1;
 switch CaseStudy
     case 1; UserData = 'IEEE68.xlsx';  

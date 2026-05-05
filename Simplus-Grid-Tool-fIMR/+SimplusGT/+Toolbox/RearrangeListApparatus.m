@@ -62,7 +62,7 @@ ListAppType = ListApp(:,2);
 
 % Get the apparatus bus in cell form
 for n = 1:N_App
-    if ~isnan(ListAppBus(n))  % If not NaN, then the bus is a scalar rather han an array in char type
+    if ~isnan(ListAppBus(n))  % If not NaN, then the bus is a scalar rather than an array in char type
         AppBusCell{n} = ListAppBus(n);
     else
         AppBusCell{n} = str2num(ListAppBusChar{n});

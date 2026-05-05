@@ -9,7 +9,7 @@
 % 'PortConnectivity', 'PortHandles', 'ScopeConfiguration'
 
 %%
-function MainSimulink(Name_Model,ListBus,ListLine,ApparatusBus,ApparatusType,ListAdvance,PowerFlow)
+function [Pos_Bus,Name_Bus,Name_Apparatus,Pos_powergui]=MainSimulink(Name_Model,ListBus,ListLine,ApparatusBus,ApparatusType,ListAdvance,PowerFlow)
 
 %% Common variables
 SimplusGT.Simulink.NewSimulinkModel('ModelName',Name_Model);

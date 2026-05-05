@@ -19,6 +19,8 @@ function plot_c(Xw,fbd,varargin)
     [Color,~]      = SimplusGT.LoadVar([],'Color',varargin);
     [PhaseOn,~]    = SimplusGT.LoadVar(1,'PhaseOn',varargin);
     [PhaseShift,~] = SimplusGT.LoadVar(0,'PhaseShift',varargin);
+    [Marker,~] = SimplusGT.LoadVar(0,'Marker',varargin);
+    [Markersize,~] = SimplusGT.LoadVar(5,'MarkerSize',varargin);
 
     [M,N,W] = size(Xw);
 
@@ -177,6 +179,8 @@ function plot_c(Xw,fbd,varargin)
         for h = 1:length(p)
             p(h).LineWidth = LineWidth;
             p(h).LineStyle = LineStyle;
+            p(h).Marker = Marker;
+            p(h).MarkerSize = Markersize;
             if ~isempty(Color)
                 p(h).Color = Color;
             end

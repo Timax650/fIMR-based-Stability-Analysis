@@ -1,4 +1,4 @@
-%Author: Yue Zhu, Ruiting Xu
+%Author: Yue Zhu
 %Introduction: in this file, parameters of an apparatus Ak is pertrubed one by
 %one. The perturbation amplitude Delta_rho = 1e-5*(1+abs(rho)).
 % At this toolbox's version, the apparatus's parameters will not affect the 
@@ -38,10 +38,10 @@ for ApparatusCount = 1:ApparatusSelNum
         
         Layer3Result(ApparatusCount).Apparatus={['Apparatus',num2str(ApparatusSelL3)]};
         Layer3Result(ApparatusCount).Result(k).ParaName = ParamName(k);
-        Layer3Result(ApparatusCount).Result(k).DeltaZ.dd = (ZmValNew.dd - ZmValOrig.dd)/(delta_para);
-        Layer3Result(ApparatusCount).Result(k).DeltaZ.dq = (ZmValNew.dq - ZmValOrig.dq)/(delta_para);
-        Layer3Result(ApparatusCount).Result(k).DeltaZ.qd = (ZmValNew.qd - ZmValOrig.qd)/(delta_para);
-        Layer3Result(ApparatusCount).Result(k).DeltaZ.qq = (ZmValNew.qq - ZmValOrig.qq)/(delta_para);
+        Layer3Result(ApparatusCount).Result(k).DeltaZ.dd = (ZmValNew.dd - ZmValOrig.dd)/delta_para;
+        Layer3Result(ApparatusCount).Result(k).DeltaZ.dq = (ZmValNew.dq - ZmValOrig.dq)/delta_para;
+        Layer3Result(ApparatusCount).Result(k).DeltaZ.qd = (ZmValNew.qd - ZmValOrig.qd)/delta_para;
+        Layer3Result(ApparatusCount).Result(k).DeltaZ.qq = (ZmValNew.qq - ZmValOrig.qq)/delta_para;
 
         Layer3Result(ApparatusCount).Result(k).Ddet = ...
             Layer3Result(ApparatusCount).Result(k).DeltaZ.dd * Ysys_(1,1) * abs(ParaSel)...

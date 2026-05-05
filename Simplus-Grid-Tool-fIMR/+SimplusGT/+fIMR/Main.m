@@ -33,6 +33,7 @@ fprintf('Loading data, please wait a second...\n')
 ListBasic = xlsread(UserData,'Basic');
 Fs = ListBasic(1);
 Ts = 1/Fs;              % (s), sampling period
+kTs = 1;
 Fbase = ListBasic(2);   % (Hz), base frequency
 Sbase = ListBasic(3);   % (VA), base power
 Vbase = ListBasic(4);   % (V), base voltage
@@ -193,7 +194,8 @@ if Enable_CreateSimulinkModel == 1
     close_system(Name_Model,0);
     
     % Create the simulink model
-    SimplusGT.Simulink.MainSimulink(Name_Model,ListBus,ListLineNew,ApparatusBus,ApparatusType,ListAdvance,PowerFlowNew);
+    [Pos_Bus,Name_Bus,Name_Apparatus,Pos_powergui]=...
+         SimplusGT.Simulink.MainSimulink(Name_Model,ListBus,ListLineNew,ApparatusBus,ApparatusType,ListAdvance,PowerFlowNew);
     fprintf('Get the simulink model successfully! \n')
     fprintf('Please click the "run" button in the model to run it.\n')
     %fprintf('Warning: for later use of the simulink model, please "save as" a different name.\n')
@@ -278,9 +280,11 @@ if Enable_PlotPole
     title('Zoomed pole map');
     axis([-80,20,-150,150]);
     plot([-80,0], [-80,0]*10, '--k','LineWidth',2,'Color','blue')
+    plot([-180,0], [-180,0]*3.333, '--k','LineWidth',2,'Color','red')    
     plot([-80,0], [80,0]*10, '--k','LineWidth',2,'Color','blue')
-    legend('mode','10% damping line')
-    
+    plot([-180,0], [180,0]*3.333, '--k','LineWidth',2,'Color','red')
+    legend('mode','10% damping line','30% damping line')
+
     %SimplusGT.mtit('Pole Map');
 else
     fprintf('Warning: The default plot of pole map is disabled.\n')
@@ -288,7 +292,11 @@ end
 
 % omega_p = [logspace(-1,log10(25.5),5e2),logspace(log10(25.5),log10(27.5),50),logspace(log10(27.5),4,5e2)]*2*pi;
 % omega_p = [logspace(-1,log10(90),5e2),logspace(log10(90),log10(92),1e2),logspace(log10(92),4,5e2)]*2*pi;
-omega_p = [logspace(-1,4,1e3)]*2*pi;
+% omega_p = [logspace(-1,4,1e3)]*2*pi;
+% omega_p = [logspace(log10(59),log10(61),300)]*2*pi;
+% omega_p = [logspace(log10(0.1),log10(59),500),logspace(log10(59),log10(61),100),logspace(log10(61),log10(1e4),500)]*2*pi;
+omega_p = [logspace(log10(0.1),log10(75),500),logspace(log10(75),log10(78),100),logspace(log10(78),log10(1e4),500)]*2*pi;
+% omega_p = [logspace(log10(0.001),log10(1),1000)]*2*pi;
 omega_pn = [-flip(omega_p),omega_p];
 
 
@@ -321,13 +329,29 @@ if Enable_PlotAdmittance
         CountLegend = CountLegend + 1;
         VecLegend{CountLegend} = ['POI-',num2str(k_a)];
     end
-    legend(VecLegend);
-    xlabel('Frequency (Hz)');
+    % legend(VecLegend);
+    % xlabel('Frequency (Hz)');
     % ylabel('Magnitude (pu)');
-    SimplusGT.mtit('Admittance Spectrum');
+    % SimplusGT.mtit('Admittance Spectrum');
+    % set(gca,'fontsize',9,'fontname','Times New Roman');
 else
     fprintf('Warning: The default plot of admittance spectrum is disabled.\n')
 end
+figure(figure_n);
+subplot(2,1,1);
+set(gcf,'unit','normalized','position',[0.2,0.2,0.2,0.28]);
+set(gca,'position',[0.15,0.55,0.74,0.35]);
+set(gca,'XTickLabel',{' '});
+set(gca,'fontsize',9,'fontname','Times New Roman');
+set(gca,'YTick',[10^-2,10^-1,10^0,10^1,10^2,10^3]);
+axis([1 1000 10^-1.5 10^1.5]);
+
+subplot(2,1,2);
+set(gca,'position',[0.15,0.15,0.74,0.35]);
+set(gca,'fontsize',9,'fontname','Times New Roman');
+axis([1 1000 -500 200]);
+
+
 
 % Plot Ysys and Zapp
 % OmegaPN = [-flip(omega_p),omega_p];
@@ -352,13 +376,9 @@ axis_co=[1 300 1e-3 1e2];
 figure_n=figure_n+1;
 figure(figure_n)
 for k=1:Num_IBRbus
-    SimplusGT.plot_c(Zapp{k}(1,1,:),OmegaPN/2/pi,'PhaseOn',0,'PhaseShift',0,'LineWidth',0.5);
+    SimplusGT.plot_c(Zapp{k}(1,1,:),OmegaPN/2/pi,'PhaseOn',1,'LineWidth',0.5);
     % SimplusGT.bode_c(YcellSym{k}(1,1),1j*OmegaPN);
 end
-legend(VecLegend);
-xlabel('Frequency (Hz)');
-ylabel('Magnitude (pu)');
-SimplusGT.mtit('Apparatus impedance');
 
 figure_n=figure_n+1;
 figure(figure_n)
@@ -366,16 +386,27 @@ for k=1:Num_IBRbus
     SimplusGT.plot_c(M{k}(1,1,:),OmegaPN/2/pi,'PhaseOn',0,'PhaseShift',0,'LineWidth',0.5);
     % SimplusGT.bode_c(YcellSym{k}(1,1),1j*OmegaPN);
 end
-legend(VecLegend);
-xlabel('Frequency (Hz)');
-ylabel('Magnitude (pu)');
-SimplusGT.mtit('fIMR');
-set(gcf,'unit','normalized','position',[0.2,0.2,0.2,0.16]);
-set(gca,'position',[0.15,0.2,0.74,0.65]);
+set(gcf,'unit','normalized','position',[0.2,0.2,0.2,0.14]);
+set(gca,'position',[0.15,0.2,0.74,0.7]);
 % set(gca,'XTickLabel',{' '});
 set(gca,'fontsize',9,'fontname','Times New Roman');
 set(gca,'YTick',[10^-4,10^-3,10^-2,10^-1,10^0,10^1,10^2]);
 axis([1 1000 10^-2.5 10^0.9]);
+
+%Plot norms
+% figure_n=figure_n+1;
+% figure(figure_n)
+% for k=1:Num_IBRbus
+%     SimplusGT.plot_c(n_Ysys{k}(1,1,:),OmegaPN/2/pi,'PhaseOn',0,'PhaseShift',0,'LineWidth',0.5);
+%     % SimplusGT.bode_c(YcellSym{k}(1,1),1j*OmegaPN);
+% end
+% 
+% figure_n=figure_n+1;
+% figure(figure_n)
+% for k=1:Num_IBRbus
+%     SimplusGT.plot_c(n_Zapp{k}(1,1,:),OmegaPN/2/pi,'PhaseOn',0,'PhaseShift',0,'LineWidth',0.5);
+%     % SimplusGT.bode_c(YcellSym{k}(1,1),1j*OmegaPN);
+% end
 
 
 

@@ -67,7 +67,8 @@ classdef GridFormingVSI_old < SimplusGT.Class.ModelAdvance
             Rf = xRf/Sbase;
             Cf = xwCf*Sbase/W0;
             Lc = xwLc/Sbase/W0;
-            Rc = xRc*Sbase;
+            Rc = xRc/Sbase;
+            Rb = 0.01;
             Xov= xXov/Sbase;
             Dw = xDw*W0*Sbase;
             wf = xfdroop*2*pi;
@@ -83,7 +84,7 @@ classdef GridFormingVSI_old < SimplusGT.Class.ModelAdvance
             v_gdq = v_gd + 1i*v_gq;
             i_odq = i_od + 1i*i_oq;
             v_odq = v_gdq - i_odq*(Rc + 1i*w*Lc);
-            i_cdq = v_odq*(1i*w*Cf);
+            i_cdq = v_odq/(1/(1i*w*Cf)+Rb);
             i_ldq = i_odq - i_cdq;
             e_dq = v_odq - i_ldq*(Rf + 1i*w*Lf);
             
@@ -99,7 +100,8 @@ classdef GridFormingVSI_old < SimplusGT.Class.ModelAdvance
             i_oq = imag(i_oq);
             theta = xi;
             
-            P0 = 0;
+            % P0 = 0;
+            P0 = -P;
             
             % ??? Temp
             obj.v_od_r = real(v_odq);
@@ -153,6 +155,7 @@ classdef GridFormingVSI_old < SimplusGT.Class.ModelAdvance
             Cf = xwCf*Sbase/w0;
             Lc = xwLc/Sbase/w0;
             Rc = xRc/Sbase;
+            Rb = 0.01;
             Xov= xXov/Sbase;
             Dw = xDw*w0*Sbase;
             wf = xfdroop*2*pi;
@@ -162,11 +165,13 @@ classdef GridFormingVSI_old < SimplusGT.Class.ModelAdvance
             Rov      = 0;
             kp_i_ldq = w_i_ldq*Lf;
             ki_i_ldq = w_i_ldq^2*Lf/4;
-            kp_v_odq = w_v_odq*Cf;
-            ki_v_odq = w_v_odq^2*Cf/4*100;
+            % kp_v_odq = w_v_odq*Cf; 
+            % ki_v_odq = w_v_odq^2*Cf/4*100; 
                 % This is a different way of setting voltage PI
                 % kp_v_odq = 1/(16*w_i_ldq*Lf);
                 % ki_v_odq = 1/(4*Lf);
+            ki_v_odq = w_v_odq^2*Cf/4*50;
+            kp_v_odq = ki_v_odq/100;
             
             % State space equations
          	% dx/dt = f(x,u)
@@ -218,8 +223,8 @@ classdef GridFormingVSI_old < SimplusGT.Class.ModelAdvance
                 % Cf equation
                 % -(i_ld - i_od) = Cf*dv_cd/dt - w*Cf*v_cq
                 % -(i_lq - i_oq) = Cf*dv_cq/dt + w*Cf*v_cd
-                dv_od = (-(i_ld - i_od) + w*Cf*v_oq)/Cf;
-                dv_oq = (-(i_lq - i_oq) - w*Cf*v_od)/Cf;
+                dv_od = (-(i_ld - i_od) + w*Cf*(v_oq-(i_oq - i_lq)*Rb))/Cf;
+                dv_oq = (-(i_lq - i_oq) - w*Cf*(v_od-(i_od - i_ld)*Rb))/Cf;
 
                 % Lc equation
                 % v_od - v_d = -(Lc*di_od/dt + Rc*i_od - w*Lc*i_oq)

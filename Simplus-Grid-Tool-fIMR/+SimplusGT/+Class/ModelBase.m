@@ -247,7 +247,23 @@ methods(Static)
         % Input  = {'u1','u2', ...};
         % Output = {'y1','y2', ...};
     end
+
 end
+
+% methods (Access = public)
+%     function s = exportData(obj)
+%         mc = metaclass(obj);
+%         propList = {mc.PropertyList.Name};
+% 
+%         for i = 1:length(propList)
+%             try
+%                 s.(propList{i}) = obj.(propList{i});
+%             catch
+% 
+%             end
+%         end
+%     end
+% end
 
 end % End class definition
 

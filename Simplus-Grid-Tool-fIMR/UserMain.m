@@ -11,7 +11,7 @@ clc;
 close all;
 
 %% choose the avaliable case studies: 1-2.
-CaseStudy=4;
+CaseStudy=2;
 switch CaseStudy
     case 1; UserData = 'IEEE68_GFM_original.xlsx';  
     case 2; UserData = 'IEEE68_GFM_detuned.xlsx';  
@@ -60,13 +60,13 @@ save([Folder_Name,'/','initial_data14_2.mat']);
 
 %% Step 3: Run VerifyChainRule.m for verification, the manuscript illustrates results of 68-bus system
 load('initial_data14_2.mat');
-No_modev=No_modec; Appselv=Appselc;
-Paraselv = 8;   %Select any parameter which can change Zapp
+No_modev=No_modec; Appselv=Appselc; 
 if CaseStudy<=3
-    mode_pickv = -1.667+30.84i; %in Hz, select the mode you want to verify, which should be aligned with the one you select in Critical_fIMR
-    % mode_pick = -0.90+76.45i;
+    mode_pickv = -0.90+76.45i;
+    Paraselv = 6; %Select any parameter which can change Zapp
 else
     mode_pickv = -0.584+31.73i;
+    Paraselv = 8;
 end
 
 SimplusGT.fIMR.VerifyChainRule();
